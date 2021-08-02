@@ -1,0 +1,41 @@
+/* General socket address */
+typedef unsigned short int sa_family_t;
+struct sockaddr {
+    sa_family_t sa_family;  /* address family 16-bit */
+    char sa_data[14];   /* specific address value 112-bit */
+}; 
+
+
+
+/* IPv4 socket address  */
+typedef uint32_t in_addr_t;
+struct in_addr {
+    in_addr_t s_addr;
+};
+struct sockaddr_in {
+    sa_family_t sin_family; /* 16-bit */
+    in_port_t sin_port;     /* port number 16-bit */
+    struct in_addr sin_addr;    /* internet address 32-bit */
+
+    /* just for place holder */
+    unsigned char sin_zero[8];
+};
+
+
+
+/* IPv6 socket address */
+struct sockaddr_in6 {
+    sa_family_t sin6_family; /* 16-bit */
+    in_port_t sin6_port;  /* port number 16-bit */
+    uint32_t sin6_flowinfo; /* IPv6 flow info 32-bit*/
+    struct in6_addr sin6_addr;  /* IPv6 address 128-bit */
+    uint32_t sin6_scope_id; /* IPv6 scope ID 32-bit */
+};
+
+
+
+/* local socket address */
+struct sockaddr_un {
+    unsigned short sun_family; /* It should be AF_LOCAL */
+    char sun_path[108];   /* path name */
+};
