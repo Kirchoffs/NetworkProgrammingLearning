@@ -1,4 +1,13 @@
-#include "lib/common.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 // The htonl() function converts the unsigned integer hostlong from host byte order to network byte order.
 // The htons() function converts the unsigned short integer hostshort from host byte order to network byte order.
@@ -32,7 +41,7 @@ void read_data(int sockfd) {
     ssize_t n;
     char buf[1024];
 
-    int time = 0;
+    static int time = 0;
     for (;;) {
         fprintf(stdout, "block in read\n");
         if ((n = readn(sockfd, buf, 1024)) == 0)
@@ -40,7 +49,7 @@ void read_data(int sockfd) {
 
         time++;
         fprintf(stdout, "1K read for %d \n", time);
-        usleep(1000);
+        sleep(1);
     }
 }
 

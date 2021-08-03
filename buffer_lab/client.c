@@ -1,8 +1,18 @@
-#include "lib/common.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <errno.h>
+#include <error.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 #define MESSAGE_SIZE 102400
 
-void send_data(int sockfd) {
+void send_data(int socket_fd) {
     char *query;
     query = malloc(MESSAGE_SIZE + 1);
     for (int i = 0; i < MESSAGE_SIZE; i++) {
@@ -14,8 +24,8 @@ void send_data(int sockfd) {
     cp = query;
     size_t remaining = strlen(query);
     while (remaining) {
-        int n_written = send(sockfd, cp, remaining, 0);
-        fprintf(stdout, "send into buffer %ld \n", n_written);
+        int n_written = send(socket_fd, cp, remaining, 0);
+        fprintf(stdout, "send into buffer %d \n", n_written);
         if (n_written <= 0) {
             error(1, errno, "send failed");
             return;
