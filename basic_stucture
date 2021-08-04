@@ -39,3 +39,18 @@ struct sockaddr_un {
     unsigned short sun_family; /* It should be AF_LOCAL */
     char sun_path[108];   /* path name */
 };
+
+
+/* TCP */
+int listen(int socketfd, int backlog)
+int accept(int listensockfd, struct sockaddr *cliaddr, socklen_t *addrlen)
+int connect(int sockfd, const struct sockaddr *servaddr, socklen_t addrlen)
+
+ssize_t write (int socketfd, const void *buffer, size_t size)
+ssize_t send (int socketfd, const void *buffer, size_t size, int flags)
+ssize_t sendmsg(int sockfd, const struct msghdr *msg, int flags)
+
+/* UDP */
+/* sys/socket.h */
+ssize_t recvfrom(int sockfd, void *buff, size_t nbytes, int flags, struct sockaddr *from, socklen_t *addrlen); 
+ssize_t sendto(int sockfd, const void *buff, size_t nbytes, int flags, const struct sockaddr *to, socklen_t addrlen); 

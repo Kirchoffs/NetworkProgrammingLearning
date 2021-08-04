@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -46,11 +45,11 @@ int main(int argc, char **argv) {
 
     socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 
-    bzero(&server_addr, sizeof(server_addr));
+    memset(&server_addr, 0, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(12345);
     inet_pton(AF_INET, argv[1], &server_addr.sin_addr);
-    int connect_rt = connect(socket_fd, (struct sockaddr *) &server_addr, sizeof(server_addr));
+    int connect_rt = connect(socket_fd, (struct sockaddr *)&server_addr, sizeof(server_addr));
     if (connect_rt < 0) {
         error(1, errno, "connect failed");
     }

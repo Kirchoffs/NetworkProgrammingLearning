@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -13,7 +12,6 @@
 // The htons() function converts the unsigned short integer hostshort from host byte order to network byte order.
 // The ntohl() function converts the unsigned integer netlong from network byte order to host byte order.
 // The ntohs() function converts the unsigned short integer netshort from network byte order to host byte order.
-
 
 /* read size bytes from socket fd */
 size_t readn(int fd, void *buffer, size_t size) {
@@ -47,8 +45,8 @@ void read_data(int sockfd) {
         if ((n = readn(sockfd, buf, 1024)) == 0)
             return;
 
-        time++;
-        fprintf(stdout, "1K read for %d \n", time);
+        time += n;
+        fprintf(stdout, "read %d bytes \n", time);
         sleep(1);
     }
 }
@@ -61,7 +59,7 @@ int main(int argc, char **argv) {
 
     listen_fd = socket(AF_INET, SOCK_STREAM, 0);
 
-    bzero(&server_addr, sizeof(server_addr));
+    memset(&server_addr, 0, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     server_addr.sin_port = htons(12345);
