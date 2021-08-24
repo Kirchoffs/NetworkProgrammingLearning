@@ -15,4 +15,4 @@ server:
 	./output/server.o
 
 clean:
-	rm *.o
+	rm ./output/*.o

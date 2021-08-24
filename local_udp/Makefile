@@ -9,10 +9,10 @@ server.o: server.c
 	gcc -std=c99 -o output/server.o server.c
 
 client:
-	./output/client.o 127.0.0.1
+	./output/client.o ./unix_datagram.sock
 
 server:
-	./output/server.o
+	./output/server.o ./unix_datagram.sock
 
 clean:
-	rm ./output/*.o
+	rm output/*.o

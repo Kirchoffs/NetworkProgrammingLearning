@@ -41,6 +41,7 @@ struct sockaddr_un {
 };
 
 
+
 /* TCP */
 int listen(int socketfd, int backlog)
 int accept(int listensockfd, struct sockaddr *cliaddr, socklen_t *addrlen)
@@ -50,7 +51,15 @@ ssize_t write (int socketfd, const void *buffer, size_t size)
 ssize_t send (int socketfd, const void *buffer, size_t size, int flags)
 ssize_t sendmsg(int sockfd, const struct msghdr *msg, int flags)
 
+
+
 /* UDP */
-/* sys/socket.h */
 ssize_t recvfrom(int sockfd, void *buff, size_t nbytes, int flags, struct sockaddr *from, socklen_t *addrlen); 
 ssize_t sendto(int sockfd, const void *buff, size_t nbytes, int flags, const struct sockaddr *to, socklen_t addrlen); 
+
+
+/* close the TCP socket */
+int close(int sockfd)
+
+// howto: SHUT_RD(0), SHUT_WR(1), SHUT_RDWR(2)
+int shutdown(int sockfd, int howto)

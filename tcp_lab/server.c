@@ -51,7 +51,6 @@ void read_data(int sockfd) {
     }
 }
 
-
 int main(int argc, char **argv) {
     int listen_fd, connect_fd;
     socklen_t client_len;
