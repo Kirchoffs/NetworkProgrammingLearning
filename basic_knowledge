@@ -1,48 +1,46 @@
-/* General socket address */
+/* 1. General socket address */
 typedef unsigned short int sa_family_t;
 struct sockaddr {
-    sa_family_t sa_family;  /* address family 16-bit */
-    char sa_data[14];   /* specific address value 112-bit */
+    sa_family_t sa_family;  // address family 16-bit
+    char sa_data[14];       // specific address value 112-bit
 }; 
 
 
 
-/* IPv4 socket address  */
+/* 2. IPv4 socket address  */
 typedef uint32_t in_addr_t;
 struct in_addr {
     in_addr_t s_addr;
 };
 struct sockaddr_in {
-    sa_family_t sin_family; /* 16-bit */
-    in_port_t sin_port;     /* port number 16-bit */
-    struct in_addr sin_addr;    /* internet address 32-bit */
-
-    /* just for place holder */
-    unsigned char sin_zero[8];
+    sa_family_t sin_family;     // 16-bit
+    in_port_t sin_port;         // port number 16-bit
+    struct in_addr sin_addr;    // internet address 32-bit
+    unsigned char sin_zero[8];  // just for place holder
 };
 
 
 
-/* IPv6 socket address */
+/* 3. IPv6 socket address */
 struct sockaddr_in6 {
-    sa_family_t sin6_family; /* 16-bit */
-    in_port_t sin6_port;  /* port number 16-bit */
-    uint32_t sin6_flowinfo; /* IPv6 flow info 32-bit*/
-    struct in6_addr sin6_addr;  /* IPv6 address 128-bit */
-    uint32_t sin6_scope_id; /* IPv6 scope ID 32-bit */
+    sa_family_t sin6_family;    // 16-bit
+    in_port_t sin6_port;        // port number 16-bit
+    uint32_t sin6_flowinfo;     // IPv6 flow info 32-bit
+    struct in6_addr sin6_addr;  // IPv6 address 128-bit
+    uint32_t sin6_scope_id;     // IPv6 scope ID 32-bit
 };
 
 
 
-/* local socket address */
+/* 4. local socket address */
 struct sockaddr_un {
-    unsigned short sun_family; /* It should be AF_LOCAL */
-    char sun_path[108];   /* path name */
+    unsigned short sun_family; // It should be AF_LOCAL
+    char sun_path[108];        // path name
 };
 
 
 
-/* TCP */
+/* 5. TCP */
 int listen(int socketfd, int backlog)
 int accept(int listensockfd, struct sockaddr *cliaddr, socklen_t *addrlen)
 int connect(int sockfd, const struct sockaddr *servaddr, socklen_t addrlen)
@@ -53,13 +51,44 @@ ssize_t sendmsg(int sockfd, const struct msghdr *msg, int flags)
 
 
 
-/* UDP */
+/* 6. UDP */
 ssize_t recvfrom(int sockfd, void *buff, size_t nbytes, int flags, struct sockaddr *from, socklen_t *addrlen); 
 ssize_t sendto(int sockfd, const void *buff, size_t nbytes, int flags, const struct sockaddr *to, socklen_t addrlen); 
 
 
-/* close the TCP socket */
+/* 7. close the TCP socket */
 int close(int sockfd)
+int shutdown(int sockfd, int howto) // howto: SHUT_RD(0), SHUT_WR(1), SHUT_RDWR(2)
 
-// howto: SHUT_RD(0), SHUT_WR(1), SHUT_RDWR(2)
-int shutdown(int sockfd, int howto)
+/* 8. select */
+// if some descriptors are ready, then return the number of it
+// if timeout, then return 0
+// if error, then return -1
+// maxfd = real max fd + 1
+
+// if timeout == NULL, then if no IO events happen, it will wait
+// if timeout != 0, wait for a certain period of time
+// if timeout == 0, no waiting, immediatelly return
+int select(int maxfd, fd_set *readset, fd_set *writeset, fd_set *exceptset, const struct timeval *timeout);
+
+void FD_ZERO(fd_set *fdset);
+void FD_SET(int fd, fd_set *fdset);
+void FD_CLR(int fd, fd_set *fdset);
+int  FD_ISSET(int fd, fd_set *fdset);
+
+struct timeval {
+    long   tv_sec; /* seconds */
+    long   tv_usec; /* microseconds */
+};
+
+/*
+ * An fd_set is a fixed size buffer. 
+ * Executing FD_CLR() or FD_SET() with a value of fd that is negative or 
+ * is equal to or larger than FD_SETSIZE will result in undefined behavior. 
+ * Moreover, POSIX requires fd to be a valid file descriptor.
+*/
+
+// in sys/select.h
+#define FD_SETSIZE __FD_SETSIZE
+// in typesizes.h
+#define __FD_SETSIZE 1024

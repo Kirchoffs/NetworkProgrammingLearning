@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(12345);
     inet_pton(AF_INET, argv[1], &server_addr.sin_addr);
-    int connect_rt = connect(socket_fd, (struct sockaddr *)&server_addr, sizeof(server_addr));
+    int connect_rt = connect(socket_fd, (struct sockaddr *) &server_addr, sizeof(server_addr));
     if (connect_rt < 0) {
         error(1, errno, "connect failed");
     }
