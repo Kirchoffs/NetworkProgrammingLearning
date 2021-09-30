@@ -27,7 +27,7 @@ size_t readn(int fd, void *buffer, size_t size) {
             else
                 return (-1);
         } else if (result == 0)
-            break;                /* EOF(End of File) */
+            break;                 /* EOF(End of File) */
 
         length -= result;
         buffer_pointer += result;

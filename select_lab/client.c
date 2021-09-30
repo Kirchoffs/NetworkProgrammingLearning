@@ -11,7 +11,8 @@
 #include <unistd.h>
 #include <sys/select.h>
 
-#define MAXLINE 4096
+#define MAX_LINE 4096
+#define EXTRA_LINE 4
 #define SERV_PORT 12345
 
 int tcp_client(char* host, uint16_t hostshort) {
@@ -35,11 +36,11 @@ int tcp_client(char* host, uint16_t hostshort) {
 
 int main(int argc, char **argv) {
     if (argc != 2) {
-        error(1, 0, "usage: select01 <IPaddress>");
+        error(1, 0, "usage: cmd <IPaddress>");
     }
     int socket_fd = tcp_client(argv[1], SERV_PORT);
 
-    char recv_line[MAXLINE], send_line[MAXLINE];
+    char recv_line[MAX_LINE + EXTRA_LINE], send_line[MAX_LINE];
     int n;
 
     fd_set readmask;
@@ -49,7 +50,7 @@ int main(int argc, char **argv) {
     FD_SET(socket_fd, &allreads);  // set socket_fd to 1, ready to check
 
     for (;;) {
-        readmask = allreads; // reset readmask
+        readmask = allreads;       // reset readmask
         int rc = select(socket_fd + 1, &readmask, NULL, NULL, NULL);
 
         if (rc <= 0) {
@@ -57,20 +58,23 @@ int main(int argc, char **argv) {
         }
 
         if (FD_ISSET(socket_fd, &readmask)) {
-            n = read(socket_fd, recv_line, MAXLINE);
+            n = read(socket_fd, recv_line, MAX_LINE + EXTRA_LINE);
             if (n < 0) {
                 error(1, errno, "read error");
             } else if (n == 0) {
-                error(1, 0, "server terminated \n");
+                error(1, 0, "server terminated\n");
             }
             recv_line[n] = 0;
+            printf("we have %d\n", n);
+            printf("receive: ");
             fputs(recv_line, stdout);
             fputs("\n", stdout);
         }
 
         if (FD_ISSET(STDIN_FILENO, &readmask)) {
-            if (fgets(send_line, MAXLINE, stdin) != NULL) {
+            if (fgets(send_line, MAX_LINE, stdin) != NULL) {
                 int i = strlen(send_line);
+                printf("i is %d\n", i);
                 if (send_line[i - 1] == '\n') {
                     send_line[i - 1] = 0;
                 }
